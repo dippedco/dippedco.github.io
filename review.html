@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dipped Co. - Client Review Form</title>
+    <title>Dipped Co. Sweets - Client Review Form</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
@@ -73,7 +73,7 @@
             color: #4A2E2B;
             margin-bottom: 4px;
         }
-        input[type="text"], input[type="email"], select, textarea {
+        input[type="text"], input[type="email"], select, textarea, input[type="file"] {
             width: 100%;
             border: 1px solid #C8B9AD;
             background-color: #FAFAFB;
@@ -134,12 +134,13 @@
 
     <div class="container">
         <div class="intro-text">
-            Thank you for choosing Dipped Co.! We would love to hear about your experience. Your feedback helps us continue crafting sweet memories!
+            Thank you for choosing Dipped Co. Sweets! We would love to hear about your experience. Your feedback helps us continue crafting sweet memories!
         </div>
 
-        <form action="https://formsubmit.co/dippedco.sweets@gmail.com" method="POST">
-            <!-- Form Settings: CAPTCHA IS ENABLED -->
-            <input type="hidden" name="_subject" value="New Customer Review - Dipped Co.">
+        <!-- Note enctype="multipart/form-data" added for image upload -->
+        <form action="https://formsubmit.co/dippedco.sweets@gmail.com" method="POST" enctype="multipart/form-data">
+            <!-- Form Settings: CAPTCHA ENABLED -->
+            <input type="hidden" name="_subject" value="New Customer Review - Dipped Co. Sweets">
             <input type="hidden" name="_captcha" value="true">
             <input type="text" name="_honey" style="display:none">
 
@@ -169,7 +170,7 @@
             <!-- 2. STAR RATING -->
             <div class="section-title">2. Overall Rating</div>
             <div class="rating-box">
-                <label style="font-size: 10pt; margin-bottom: 6px;">How would you rate your Dipped Co. treats?</label>
+                <label style="font-size: 10pt; margin-bottom: 6px;">How would you rate your Dipped Co. Sweets treats?</label>
                 <div style="font-size: 18pt; color: #D4A373; margin-bottom: 8px;">
                     ⭐⭐⭐⭐⭐
                 </div>
@@ -190,6 +191,13 @@
                 <label>Your Review / Testimonial *</label>
                 <textarea name="Review Content" rows="4" required placeholder="Tell us what you loved about the design, taste, or presentation..."></textarea>
             </div>
+
+            <!-- PHOTO UPLOAD FIELD -->
+            <div class="form-group">
+                <label>Upload a Photo of Your Treats (optional)</label>
+                <input type="file" name="Treat Photo" accept="image/*">
+            </div>
+
             <div class="form-group" style="margin-top: 14px;">
                 <label>May we feature your review and/or photo on our Instagram page?</label>
                 <div style="display: flex; gap: 20px; margin-top: 4px;">
@@ -204,7 +212,7 @@
         </form>
 
         <div class="footer-note">
-            Thank you for supporting Dipped Co.! We appreciate your feedback & love serving you. 
+            Thank you for supporting Dipped Co. Sweets! We appreciate your feedback & love serving you. 🍓
         </div>
     </div>
 
