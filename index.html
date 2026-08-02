@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dipped Co. - Order Request Form</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            color: #332226;
+            background-color: #FAFAFB;
+            line-height: 1.5;
+            padding: 30px 12px 20px 12px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            padding: 24px 15px 18px 15px;
+            background-color: #4A2E2B;
+            color: #FFFFFF;
+            border-radius: 8px 8px 0 0;
+            border-bottom: 4px solid #D4A373;
+        }
+        .header h1 {
+            font-family: 'Georgia', serif;
+            font-size: 24pt;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: normal;
+            color: #F4EAE1;
+            margin-bottom: 4px;
+        }
+        .header .subtitle {
+            font-size: 10pt;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: #D4A373;
+            font-weight: 500;
+        }
+        .container {
+            background: #FFFFFF;
+            padding: 20px;
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border: 1px solid #E6DDD5;
+            border-top: none;
+        }
+        .intro-text {
+            text-align: center;
+            font-size: 9.5pt;
+            color: #6B4E49;
+            margin-bottom: 18px;
+            font-style: italic;
+        }
+        .section-title {
+            font-family: 'Georgia', serif;
+            font-size: 12pt;
+            color: #4A2E2B;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 2px solid #D4A373;
+            padding-bottom: 4px;
+            margin-bottom: 12px;
+            margin-top: 18px;
+        }
+        .form-group { margin-bottom: 12px; }
+        label {
+            display: block;
+            font-weight: 600;
+            font-size: 9pt;
+            color: #4A2E2B;
+            margin-bottom: 4px;
+        }
+        input[type="text"], input[type="email"], input[type="tel"], input[type="date"], select, textarea, input[type="number"] {
+            width: 100%;
+            border: 1px solid #C8B9AD;
+            background-color: #FAFAFB;
+            border-radius: 5px;
+            padding: 10px;
+            font-size: 9.5pt;
+            color: #332226;
+        }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .option-card {
+            background-color: #F8F4F0;
+            border: 1px solid #E6DDD5;
+            border-radius: 6px;
+            padding: 10px;
+            margin-bottom: 8px;
+        }
+        .option-title { font-weight: bold; color: #4A2E2B; font-size: 10pt; }
+        .option-desc { font-size: 8.5pt; color: #66524E; margin-top: 2px; }
+        .option-price { float: right; font-weight: bold; color: #8C4A32; font-size: 10pt; }
+        
+        .btn-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .submit-btn {
+            background-color: #4A2E2B;
+            color: #F4EAE1;
+            border: 2px solid #D4A373;
+            width: 240px;
+            padding: 12px 18px;
+            font-size: 10.5pt;
+            font-weight: bold;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        .submit-btn:hover { background-color: #38211F; }
+        .footer-note {
+            text-align: center;
+            font-size: 8pt;
+            color: #8C706B;
+            margin-top: 16px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>DIPPED CO.</h1>
+        <div class="subtitle">Custom Order Request Form</div>
+    </div>
+
+    <div class="container">
+        <div class="intro-text">
+            Please fill out this form to request your custom dipped treats. We will review your request and contact you shortly to confirm design details!
+        </div>
+
+        <form action="https://formsubmit.co/dippedco.sweets@gmail.com" method="POST">
+            <!-- Form Settings -->
+            <input type="hidden" name="_subject" value="New Custom Order Request - Dipped Co.">
+            <input type="hidden" name="_captcha" value="false">
+
+            <!-- 1. CONTACT INFO -->
+            <div class="section-title">1. Client Contact Info</div>
+            <div class="form-group grid-2">
+                <div>
+                    <label>Full Name *</label>
+                    <input type="text" name="Full Name" required placeholder="Jane Doe">
+                </div>
+                <div>
+                    <label>Email Address *</label>
+                    <input type="email" name="Email Address" required placeholder="jane@example.com">
+                </div>
+            </div>
+            <div class="form-group grid-2">
+                <div>
+                    <label>Phone Number *</label>
+                    <input type="tel" name="Phone Number" required placeholder="(555) 000-0000">
+                </div>
+                <div>
+                    <label>Instagram Handle (optional)</label>
+                    <input type="text" name="Instagram Handle" placeholder="@yourhandle">
+                </div>
+            </div>
+            <div class="form-group grid-2">
+                <div>
+                    <label>Desired Pickup Date *</label>
+                    <input type="date" name="Desired Pickup Date" required>
+                </div>
+                <div>
+                    <label>Order Type</label>
+                    <select name="Pickup or Delivery">
+                        <option value="Pickup">Local Pickup</option>
+                        <option value="Delivery">Delivery (If available)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- 2. BOX SELECTION -->
+            <div class="section-title">2. Select Your Box Choice</div>
+            <div class="option-card">
+                <span class="option-price">$28.00</span>
+                <div class="option-title"><input type="radio" name="Box Choice" value="The Mini Box ($28)"> The Mini Box (1/2 Dozen)</div>
+                <div class="option-desc">2 Pretzel Rods, 2 Rice Krispie Treats, 2 Dipped Oreos</div>
+            </div>
+            <div class="option-card">
+                <span class="option-price">$45.00</span>
+                <div class="option-title"><input type="radio" name="Box Choice" value="The Signature Box ($45)"> The Signature Box (1 Dozen)</div>
+                <div class="option-desc">4 Pretzel Rods, 4 Rice Krispie Treats, 4 Dipped Oreos</div>
+            </div>
+            <div class="option-card">
+                <span class="option-price">$80.00</span>
+                <div class="option-title"><input type="radio" name="Box Choice" value="The Celebration Box ($80)"> The Celebration Box (2 Dozen)</div>
+                <div class="option-desc">8 Pretzel Rods, 8 Rice Krispie Treats, 8 Dipped Oreos</div>
+            </div>
+
+            <div style="margin-top: 8px; margin-bottom: 12px; background-color: #F3EBE1; padding: 10px; border-radius: 6px;">
+                <label style="margin-bottom: 6px;">Cakesicle Upgrade (Swap Rice Krispies for Mini Cakesicles):</label>
+                <div style="display: flex; gap: 20px;">
+                    <label style="font-weight: normal; cursor: pointer;"><input type="radio" name="Cakesicle Upgrade" value="No Upgrade" checked> No Upgrade</label>
+                    <label style="font-weight: normal; cursor: pointer;"><input type="radio" name="Cakesicle Upgrade" value="Yes, Upgrade"> Yes, Upgrade</label>
+                </div>
+            </div>
+
+            <!-- 3. A LA CARTE -->
+            <div class="section-title">3. A La Carte Dozens</div>
+            <div class="form-group grid-2">
+                <div>
+                    <label>Dipped Pretzels ($30/Doz)</label>
+                    <input type="number" name="Pretzel Dozens" min="0" placeholder="0">
+                </div>
+                <div>
+                    <label>Dipped Oreos ($30/Doz)</label>
+                    <input type="number" name="Oreo Dozens" min="0" placeholder="0">
+                </div>
+            </div>
+            <div class="form-group grid-2">
+                <div>
+                    <label>Rice Krispie Treats ($36/Doz)</label>
+                    <input type="number" name="Krispie Dozens" min="0" placeholder="0">
+                </div>
+                <div>
+                    <label>Dipped Cakesicles ($48/Doz)</label>
+                    <input type="number" name="Cakesicle Dozens" min="0" placeholder="0">
+                </div>
+            </div>
+
+            <!-- 4. CUSTOMIZATION -->
+            <div class="section-title">4. Design & Event Details</div>
+            <div class="form-group">
+                <label>Event Theme / Occasion</label>
+                <input type="text" name="Event Theme" placeholder="e.g. Birthday, Baby Shower, 4th of July">
+            </div>
+            <div class="form-group">
+                <label>Color Scheme (Up to 4 colors)</label>
+                <input type="text" name="Color Scheme" placeholder="e.g. Blush Pink, White, Gold Accents">
+            </div>
+            <div class="form-group">
+                <label>Special Design Notes & Inspiration Ideas</label>
+                <textarea name="Special Notes" rows="3" placeholder="Tell us any specific preferences, metallic accents, or molding requests..."></textarea>
+            </div>
+
+            <div class="btn-container">
+                <button type="submit" class="submit-btn">Submit Order Request</button>
+            </div>
+        </form>
+
+        <div class="footer-note">
+            * Please note: Custom orders should ideally be placed 10–14 days in advance. Payments are due following consultation via Venmo, Zelle, or Apple Pay.
+        </div>
+    </div>
+
+</body>
+</html>
