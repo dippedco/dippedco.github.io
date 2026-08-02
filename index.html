@@ -98,6 +98,30 @@
         .option-desc { font-size: 8.5pt; color: #66524E; margin-top: 2px; }
         .option-price { float: right; font-weight: bold; color: #8C4A32; font-size: 10pt; }
         
+        /* Flavor Options Box */
+        .flavor-box {
+            display: none;
+            margin-top: 10px;
+            margin-bottom: 14px;
+            background-color: #F3EBE1;
+            border-left: 4px solid #D4A373;
+            padding: 12px;
+            border-radius: 4px;
+        }
+        .flavor-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 6px;
+        }
+        .flavor-note {
+            font-size: 8pt;
+            color: #6B4E49;
+            font-style: italic;
+            margin-top: 6px;
+            line-height: 1.3;
+        }
+
         .btn-container {
             text-align: center;
             margin-top: 20px;
@@ -200,8 +224,8 @@
             <div style="margin-top: 8px; margin-bottom: 12px; background-color: #F3EBE1; padding: 10px; border-radius: 6px;">
                 <label style="margin-bottom: 6px;">Cakesicle Upgrade (Swap Rice Krispies for Mini Cakesicles):</label>
                 <div style="display: flex; gap: 20px;">
-                    <label style="font-weight: normal; cursor: pointer;"><input type="radio" name="Cakesicle Upgrade" value="No Upgrade" checked> No Upgrade</label>
-                    <label style="font-weight: normal; cursor: pointer;"><input type="radio" name="Cakesicle Upgrade" value="Yes, Upgrade"> Yes, Upgrade</label>
+                    <label style="font-weight: normal; cursor: pointer;"><input type="radio" name="Cakesicle Upgrade" value="No Upgrade" checked onchange="toggleFlavorSection()"> No Upgrade</label>
+                    <label style="font-weight: normal; cursor: pointer;"><input type="radio" name="Cakesicle Upgrade" value="Yes, Upgrade" onchange="toggleFlavorSection()"> Yes, Upgrade</label>
                 </div>
             </div>
 
@@ -224,7 +248,22 @@
                 </div>
                 <div>
                     <label>Dipped Cakesicles ($48/Doz)</label>
-                    <input type="number" name="Cakesicle Dozens" min="0" placeholder="0">
+                    <input type="number" id="cakesicle-qty" name="Cakesicle Dozens" min="0" placeholder="0" oninput="toggleFlavorSection()">
+                </div>
+            </div>
+
+            <!-- DYNAMIC CAKESICLE FLAVOR SECTION -->
+            <div id="cakesicle-flavor-box" class="flavor-box">
+                <label style="font-size: 9.5pt;">Select Your Cakesicle Flavor:</label>
+                <div class="flavor-grid">
+                    <label style="font-weight: normal; cursor: pointer;"><input type="radio" name="Cakesicle Flavor" value="Vanilla"> Vanilla</label>
+                    <label style="font-weight: normal; cursor: pointer;"><input type="radio" name="Cakesicle Flavor" value="Chocolate Fudge"> Chocolate Fudge</label>
+                    <label style="font-weight: normal; cursor: pointer;"><input type="radio" name="Cakesicle Flavor" value="Strawberry"> Strawberry</label>
+                    <label style="font-weight: normal; cursor: pointer;"><input type="radio" name="Cakesicle Flavor" value="Funfetti"> Funfetti</label>
+                    <label style="font-weight: normal; cursor: pointer;"><input type="radio" name="Cakesicle Flavor" value="Seasonal"> Seasonal</label>
+                </div>
+                <div class="flavor-note">
+                    * If Seasonal is selected, please check Instagram for current flavors and write your flavor preference in the notes section below.
                 </div>
             </div>
 
@@ -252,6 +291,24 @@
             * Please note: Custom orders should ideally be placed 10–14 days in advance. Payments are due following consultation via Venmo, Zelle, or Apple Pay.
         </div>
     </div>
+
+    <!-- JAVASCRIPT FOR DYNAMIC FLAVOR BOX -->
+    <script>
+        function toggleFlavorSection() {
+            const upgradeSelected = document.querySelector('input[name="Cakesicle Upgrade"]:checked');
+            const cakesicleQty = parseInt(document.getElementById('cakesicle-qty').value) || 0;
+            const flavorBox = document.getElementById('cakesicle-flavor-box');
+
+            if ((upgradeSelected && upgradeSelected.value === "Yes, Upgrade") || cakesicleQty > 0) {
+                flavorBox.style.display = 'block';
+            } else {
+                flavorBox.style.display = 'none';
+                // Uncheck flavor selections when hidden
+                const flavorRadios = document.querySelectorAll('input[name="Cakesicle Flavor"]');
+                flavorRadios.forEach(radio => radio.checked = false);
+            }
+        }
+    </script>
 
 </body>
 </html>
