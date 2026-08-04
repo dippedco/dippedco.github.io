@@ -284,17 +284,17 @@
             <div class="section-title">2. Select Your Box Choice</div>
             <div class="option-card">
                 <span class="option-price" id="mini-box-price-display">$28.00</span>
-                <div class="option-title"><input type="radio" name="Box Choice" value="The Mini Box" data-base-price="28" data-upgrade-cost="3" onchange="handleBoxChange()"> The Mini Box (1/2 Dozen)</div>
+                <div class="option-title"><input type="radio" name="Box Choice" value="The Mini Box" data-base-price="28" data-upgrade-cost="3" onclick="toggleRadio(this); handleBoxChange();"> The Mini Box (1/2 Dozen)</div>
                 <div class="option-desc">2 Pretzel Rods, 2 Rice Krispie Treats, 2 Dipped Oreos</div>
             </div>
             <div class="option-card">
                 <span class="option-price" id="sig-box-price-display">$45.00</span>
-                <div class="option-title"><input type="radio" name="Box Choice" value="The Signature Box" data-base-price="45" data-upgrade-cost="6" onchange="handleBoxChange()"> The Signature Box (1 Dozen)</div>
+                <div class="option-title"><input type="radio" name="Box Choice" value="The Signature Box" data-base-price="45" data-upgrade-cost="6" onclick="toggleRadio(this); handleBoxChange();"> The Signature Box (1 Dozen)</div>
                 <div class="option-desc">4 Pretzel Rods, 4 Rice Krispie Treats, 4 Dipped Oreos</div>
             </div>
             <div class="option-card">
                 <span class="option-price" id="cel-box-price-display">$80.00</span>
-                <div class="option-title"><input type="radio" name="Box Choice" value="The Celebration Box" data-base-price="80" data-upgrade-cost="12" onchange="handleBoxChange()"> The Celebration Box (2 Dozen)</div>
+                <div class="option-title"><input type="radio" name="Box Choice" value="The Celebration Box" data-base-price="80" data-upgrade-cost="12" onclick="toggleRadio(this); handleBoxChange();"> The Celebration Box (2 Dozen)</div>
                 <div class="option-desc">8 Pretzel Rods, 8 Rice Krispie Treats, 8 Dipped Oreos</div>
             </div>
 
@@ -314,8 +314,8 @@
             <div style="margin-top: 8px; margin-bottom: 12px; background-color: #F3EBE1; padding: 10px; border-radius: 6px;">
                 <label style="margin-bottom: 6px;">Cakesicle Upgrade (Swap Rice Krispies for Mini Cakesicles):</label>
                 <div style="display: flex; gap: 20px;">
-                    <label style="font-weight: normal; cursor: pointer;"><input type="radio" name="Cakesicle Upgrade" value="No Upgrade" checked onchange="handleUpgradeChange()"> No Upgrade</label>
-                    <label style="font-weight: normal; cursor: pointer;"><input type="radio" name="Cakesicle Upgrade" value="Yes, Upgrade" onchange="handleUpgradeChange()"> Yes, Upgrade</label>
+                    <label style="font-weight: normal; cursor: pointer;"><input type="radio" name="Cakesicle Upgrade" value="No Upgrade" checked onclick="toggleRadio(this); handleUpgradeChange();"> No Upgrade</label>
+                    <label style="font-weight: normal; cursor: pointer;"><input type="radio" name="Cakesicle Upgrade" value="Yes, Upgrade" onclick="toggleRadio(this); handleUpgradeChange();"> Yes, Upgrade</label>
                 </div>
             </div>
 
@@ -346,11 +346,11 @@
             <div id="cakesicle-flavor-box" class="sub-option-box">
                 <label style="font-size: 9.5pt;">Select Your Cakesicle Flavor:</label>
                 <div class="flavor-grid">
-                    <label style="font-weight: normal; cursor: pointer;"><input type="radio" name="Cakesicle Flavor" value="Vanilla"> Vanilla</label>
-                    <label style="font-weight: normal; cursor: pointer;"><input type="radio" name="Cakesicle Flavor" value="Chocolate Fudge"> Chocolate Fudge</label>
-                    <label style="font-weight: normal; cursor: pointer;"><input type="radio" name="Cakesicle Flavor" value="Strawberry"> Strawberry</label>
-                    <label style="font-weight: normal; cursor: pointer;"><input type="radio" name="Cakesicle Flavor" value="Funfetti"> Funfetti</label>
-                    <label style="font-weight: normal; cursor: pointer;"><input type="radio" name="Cakesicle Flavor" value="Seasonal"> Seasonal</label>
+                    <label style="font-weight: normal; cursor: pointer;"><input type="radio" name="Cakesicle Flavor" value="Vanilla" onclick="toggleRadio(this)"> Vanilla</label>
+                    <label style="font-weight: normal; cursor: pointer;"><input type="radio" name="Cakesicle Flavor" value="Chocolate Fudge" onclick="toggleRadio(this)"> Chocolate Fudge</label>
+                    <label style="font-weight: normal; cursor: pointer;"><input type="radio" name="Cakesicle Flavor" value="Strawberry" onclick="toggleRadio(this)"> Strawberry</label>
+                    <label style="font-weight: normal; cursor: pointer;"><input type="radio" name="Cakesicle Flavor" value="Funfetti" onclick="toggleRadio(this)"> Funfetti</label>
+                    <label style="font-weight: normal; cursor: pointer;"><input type="radio" name="Cakesicle Flavor" value="Seasonal" onclick="toggleRadio(this)"> Seasonal</label>
                 </div>
                 <div class="flavor-note">
                     * If Seasonal is selected, please check Instagram for current flavors and write your flavor preference in the notes section below.
@@ -396,7 +396,7 @@
             <div class="form-group">
                 <label>Have a promo code?</label>
                 <div class="promo-container">
-                    <input type="text" id="promo-code-input" name="Entered Promo Code" class="promo-input" placeholder="Enter code">
+                    <input type="text" id="promo-code-input" name="Entered Promo Code" class="promo-input" placeholder="Enter Code">
                     <button type="button" class="promo-btn" onclick="applyPromoCode()">Apply</button>
                 </div>
                 <div id="promo-msg" class="promo-msg"></div>
@@ -421,9 +421,24 @@
         </div>
     </div>
 
-    <!-- JAVASCRIPT FOR DYNAMIC CALCULATIONS & PROMO CODE -->
+    <!-- JAVASCRIPT FOR DYNAMIC CALCULATIONS & DESELECT FUNCTIONALITY -->
     <script>
         let isPromoApplied = false;
+
+        // Custom toggle script to allow unselecting radio buttons
+        function toggleRadio(element) {
+            if (element.getAttribute('data-waschecked') === 'true') {
+                element.checked = false;
+                element.setAttribute('data-waschecked', 'false');
+            } else {
+                // Clear state for all radios in the same group
+                const group = document.getElementsByName(element.name);
+                for (let i = 0; i < group.length; i++) {
+                    group[i].setAttribute('data-waschecked', 'false');
+                }
+                element.setAttribute('data-waschecked', 'true');
+            }
+        }
 
         function handleBoxChange() {
             toggleBoxOptions();
@@ -447,6 +462,8 @@
             const themedBoxSection = document.getElementById('themed-box-section');
             if (boxSelected) {
                 themedBoxSection.style.display = 'block';
+            } else {
+                themedBoxSection.style.display = 'none';
             }
         }
 
@@ -470,7 +487,10 @@
             } else {
                 flavorBox.style.display = 'none';
                 const flavorRadios = document.querySelectorAll('input[name="Cakesicle Flavor"]');
-                flavorRadios.forEach(radio => radio.checked = false);
+                flavorRadios.forEach(radio => {
+                    radio.checked = false;
+                    radio.setAttribute('data-waschecked', 'false');
+                });
             }
         }
 
