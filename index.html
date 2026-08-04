@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dipped Co. - Order Request Form</title>
+    <title>Dipped Co. Sweets - Order Request Form</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
@@ -25,7 +25,7 @@
         }
         .header h1 {
             font-family: 'Georgia', serif;
-            font-size: 24pt;
+            font-size: 22pt;
             letter-spacing: 2px;
             text-transform: uppercase;
             font-weight: normal;
@@ -73,7 +73,7 @@
             color: #4A2E2B;
             margin-bottom: 4px;
         }
-        input[type="text"], input[type="email"], input[type="tel"], input[type="date"], select, textarea, input[type="number"] {
+        input[type="text"], input[type="email"], input[type="tel"], input[type="date"], select, textarea, input[type="number"], input[type="file"] {
             width: 100%;
             border: 1px solid #C8B9AD;
             background-color: #FAFAFB;
@@ -93,6 +93,7 @@
             border-radius: 6px;
             padding: 10px;
             margin-bottom: 8px;
+            cursor: pointer;
         }
         .option-title { font-weight: bold; color: #4A2E2B; font-size: 10pt; }
         .option-desc { font-size: 8.5pt; color: #66524E; margin-top: 2px; }
@@ -121,7 +122,6 @@
             line-height: 1.3;
         }
 
-        /* Allergy Section Styling */
         .allergy-box {
             background-color: #FFF3E0;
             border-left: 4px solid #E65100;
@@ -137,9 +137,35 @@
             line-height: 1.3;
         }
 
+        /* LIVE TOTAL BAR */
+        .total-container {
+            background-color: #4A2E2B;
+            color: #F4EAE1;
+            border: 2px solid #D4A373;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 24px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .total-title {
+            font-family: 'Georgia', serif;
+            font-size: 11pt;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #D4A373;
+        }
+        .total-amount {
+            font-size: 18pt;
+            font-weight: bold;
+            color: #FFFFFF;
+        }
+
         .btn-container {
             text-align: center;
-            margin-top: 20px;
+            margin-top: 10px;
         }
         .submit-btn {
             background-color: #4A2E2B;
@@ -177,11 +203,14 @@
             Please fill out this form to request your custom dipped treats. We will review your request and contact you shortly to confirm design details!
         </div>
 
-        <form action="https://formsubmit.co/dippedco.sweets@gmail.com" method="POST">
-            <!-- Form Settings: CAPTCHA IS ENABLED -->
-            <input type="hidden" name="_subject" value="New Custom Order Request - Dipped Co.">
+        <form action="https://formsubmit.co/dippedco.sweets@gmail.com" method="POST" enctype="multipart/form-data">
+            <!-- Form Settings: CAPTCHA ENABLED -->
+            <input type="hidden" name="_subject" value="New Custom Order Request - Dipped Co. Sweets">
             <input type="hidden" name="_captcha" value="true">
             <input type="text" name="_honey" style="display:none">
+            
+            <!-- Hidden field sent in email to show calculated total -->
+            <input type="hidden" id="hidden-total-input" name="Estimated Order Total" value="$0.00">
 
             <!-- 1. CONTACT INFO -->
             <div class="section-title">1. Client Contact Info</div>
@@ -222,18 +251,18 @@
             <!-- 2. BOX SELECTION -->
             <div class="section-title">2. Select Your Box Choice</div>
             <div class="option-card">
-                <span class="option-price">$28.00</span>
-                <div class="option-title"><input type="radio" name="Box Choice" value="The Mini Box ($28)" onchange="toggleBoxOptions()"> The Mini Box (1/2 Dozen)</div>
+                <span class="option-price" id="mini-box-price-display">$28.00</span>
+                <div class="option-title"><input type="radio" name="Box Choice" value="The Mini Box" data-base-price="28" data-upgrade-cost="3" onchange="handleBoxChange()"> The Mini Box (1/2 Dozen)</div>
                 <div class="option-desc">2 Pretzel Rods, 2 Rice Krispie Treats, 2 Dipped Oreos</div>
             </div>
             <div class="option-card">
-                <span class="option-price">$45.00</span>
-                <div class="option-title"><input type="radio" name="Box Choice" value="The Signature Box ($45)" onchange="toggleBoxOptions()"> The Signature Box (1 Dozen)</div>
+                <span class="option-price" id="sig-box-price-display">$45.00</span>
+                <div class="option-title"><input type="radio" name="Box Choice" value="The Signature Box" data-base-price="45" data-upgrade-cost="6" onchange="handleBoxChange()"> The Signature Box (1 Dozen)</div>
                 <div class="option-desc">4 Pretzel Rods, 4 Rice Krispie Treats, 4 Dipped Oreos</div>
             </div>
             <div class="option-card">
-                <span class="option-price">$80.00</span>
-                <div class="option-title"><input type="radio" name="Box Choice" value="The Celebration Box ($80)" onchange="toggleBoxOptions()"> The Celebration Box (2 Dozen)</div>
+                <span class="option-price" id="cel-box-price-display">$80.00</span>
+                <div class="option-title"><input type="radio" name="Box Choice" value="The Celebration Box" data-base-price="80" data-upgrade-cost="12" onchange="handleBoxChange()"> The Celebration Box (2 Dozen)</div>
                 <div class="option-desc">8 Pretzel Rods, 8 Rice Krispie Treats, 8 Dipped Oreos</div>
             </div>
 
@@ -253,8 +282,8 @@
             <div style="margin-top: 8px; margin-bottom: 12px; background-color: #F3EBE1; padding: 10px; border-radius: 6px;">
                 <label style="margin-bottom: 6px;">Cakesicle Upgrade (Swap Rice Krispies for Mini Cakesicles):</label>
                 <div style="display: flex; gap: 20px;">
-                    <label style="font-weight: normal; cursor: pointer;"><input type="radio" name="Cakesicle Upgrade" value="No Upgrade" checked onchange="toggleFlavorSection()"> No Upgrade</label>
-                    <label style="font-weight: normal; cursor: pointer;"><input type="radio" name="Cakesicle Upgrade" value="Yes, Upgrade" onchange="toggleFlavorSection()"> Yes, Upgrade</label>
+                    <label style="font-weight: normal; cursor: pointer;"><input type="radio" name="Cakesicle Upgrade" value="No Upgrade" checked onchange="handleUpgradeChange()"> No Upgrade</label>
+                    <label style="font-weight: normal; cursor: pointer;"><input type="radio" name="Cakesicle Upgrade" value="Yes, Upgrade" onchange="handleUpgradeChange()"> Yes, Upgrade</label>
                 </div>
             </div>
 
@@ -263,21 +292,21 @@
             <div class="form-group grid-2">
                 <div>
                     <label>Dipped Pretzels ($30/Doz)</label>
-                    <input type="number" name="Pretzel Dozens" min="0" placeholder="0">
+                    <input type="number" id="pretzels-qty" name="Pretzel Dozens" min="0" placeholder="0" oninput="calculateTotal()">
                 </div>
                 <div>
                     <label>Dipped Oreos ($30/Doz)</label>
-                    <input type="number" name="Oreo Dozens" min="0" placeholder="0">
+                    <input type="number" id="oreos-qty" name="Oreo Dozens" min="0" placeholder="0" oninput="calculateTotal()">
                 </div>
             </div>
             <div class="form-group grid-2">
                 <div>
                     <label>Rice Krispie Treats ($36/Doz)</label>
-                    <input type="number" name="Krispie Dozens" min="0" placeholder="0">
+                    <input type="number" id="krispies-qty" name="Krispie Dozens" min="0" placeholder="0" oninput="calculateTotal()">
                 </div>
                 <div>
                     <label>Dipped Cakesicles ($48/Doz)</label>
-                    <input type="number" id="cakesicle-qty" name="Cakesicle Dozens" min="0" placeholder="0" oninput="toggleFlavorSection()">
+                    <input type="number" id="cakesicles-qty" name="Cakesicle Dozens" min="0" placeholder="0" oninput="handleAlaCarteCakesicleInput()">
                 </div>
             </div>
 
@@ -318,9 +347,22 @@
                 <label>Color Scheme (Up to 4 colors)</label>
                 <input type="text" name="Color Scheme" placeholder="e.g. Blush Pink, White, Gold Accents">
             </div>
+
+            <!-- PHOTO UPLOAD FIELD -->
+            <div class="form-group">
+                <label>Upload Inspiration Photo / Theme Reference (optional)</label>
+                <input type="file" name="Inspiration Image" accept="image/*">
+            </div>
+
             <div class="form-group">
                 <label>Special Design Notes & Inspiration Ideas</label>
                 <textarea name="Special Notes" rows="3" placeholder="Tell us any specific preferences, metallic accents, or molding requests..."></textarea>
+            </div>
+
+            <!-- LIVE RUNNING TOTAL DISPLAY -->
+            <div class="total-container">
+                <div class="total-title">Estimated Total</div>
+                <div class="total-amount" id="total-display">$0.00</div>
             </div>
 
             <div class="btn-container">
@@ -333,12 +375,28 @@
         </div>
     </div>
 
-    <!-- JAVASCRIPT FOR DYNAMIC SECTIONS -->
+    <!-- JAVASCRIPT FOR DYNAMIC CALCULATIONS & FLAVOR SECTIONS -->
     <script>
+        function handleBoxChange() {
+            toggleBoxOptions();
+            updateBoxPrices();
+            calculateTotal();
+        }
+
+        function handleUpgradeChange() {
+            toggleFlavorSection();
+            updateBoxPrices();
+            calculateTotal();
+        }
+
+        function handleAlaCarteCakesicleInput() {
+            toggleFlavorSection();
+            calculateTotal();
+        }
+
         function toggleBoxOptions() {
             const boxSelected = document.querySelector('input[name="Box Choice"]:checked');
             const themedBoxSection = document.getElementById('themed-box-section');
-
             if (boxSelected) {
                 themedBoxSection.style.display = 'block';
             }
@@ -347,7 +405,6 @@
         function toggleFeaturedThemeInput() {
             const isFeatured = document.querySelector('input[name="Is Advertised Theme"]:checked');
             const themeInput = document.getElementById('featured-theme-input');
-
             if (isFeatured && isFeatured.value === "Yes, Advertised Instagram Theme") {
                 themeInput.style.display = 'block';
             } else {
@@ -357,7 +414,7 @@
 
         function toggleFlavorSection() {
             const upgradeSelected = document.querySelector('input[name="Cakesicle Upgrade"]:checked');
-            const cakesicleQty = parseInt(document.getElementById('cakesicle-qty').value) || 0;
+            const cakesicleQty = parseInt(document.getElementById('cakesicles-qty').value) || 0;
             const flavorBox = document.getElementById('cakesicle-flavor-box');
 
             if ((upgradeSelected && upgradeSelected.value === "Yes, Upgrade") || cakesicleQty > 0) {
@@ -367,6 +424,46 @@
                 const flavorRadios = document.querySelectorAll('input[name="Cakesicle Flavor"]');
                 flavorRadios.forEach(radio => radio.checked = false);
             }
+        }
+
+        function updateBoxPrices() {
+            const upgradeSelected = document.querySelector('input[name="Cakesicle Upgrade"]:checked');
+            const isUpgraded = (upgradeSelected && upgradeSelected.value === "Yes, Upgrade");
+
+            // Update displayed box card prices based on upgrade choice
+            document.getElementById('mini-box-price-display').innerText = isUpgraded ? "$31.00" : "$28.00";
+            document.getElementById('sig-box-price-display').innerText = isUpgraded ? "$51.00" : "$45.00";
+            document.getElementById('cel-box-price-display').innerText = isUpgraded ? "$92.00" : "$80.00";
+        }
+
+        function calculateTotal() {
+            let total = 0;
+
+            // 1. Box Choice Calculation
+            const selectedBox = document.querySelector('input[name="Box Choice"]:checked');
+            if (selectedBox) {
+                let basePrice = parseFloat(selectedBox.getAttribute('data-base-price')) || 0;
+                let upgradeCost = parseFloat(selectedBox.getAttribute('data-upgrade-cost')) || 0;
+                
+                const upgradeSelected = document.querySelector('input[name="Cakesicle Upgrade"]:checked');
+                if (upgradeSelected && upgradeSelected.value === "Yes, Upgrade") {
+                    basePrice += upgradeCost;
+                }
+                total += basePrice;
+            }
+
+            // 2. A La Carte Calculations
+            const pretzels = (parseInt(document.getElementById('pretzels-qty').value) || 0) * 30;
+            const oreos = (parseInt(document.getElementById('oreos-qty').value) || 0) * 30;
+            const krispies = (parseInt(document.getElementById('krispies-qty').value) || 0) * 36;
+            const cakesicles = (parseInt(document.getElementById('cakesicles-qty').value) || 0) * 48;
+
+            total += (pretzels + oreos + krispies + cakesicles);
+
+            // 3. Update Display & Hidden Form Input
+            const formattedTotal = "$" + total.toFixed(2);
+            document.getElementById('total-display').innerText = formattedTotal;
+            document.getElementById('hidden-total-input').value = formattedTotal;
         }
     </script>
 
