@@ -137,6 +137,37 @@
             line-height: 1.3;
         }
 
+        /* PROMO CODE BOX */
+        .promo-container {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .promo-input {
+            flex: 1;
+            text-transform: uppercase;
+        }
+        .promo-btn {
+            background-color: #D4A373;
+            color: #4A2E2B;
+            border: none;
+            padding: 0 16px;
+            font-weight: bold;
+            font-size: 9pt;
+            border-radius: 5px;
+            cursor: pointer;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .promo-btn:hover {
+            background-color: #c29263;
+        }
+        .promo-msg {
+            font-size: 8.5pt;
+            margin-top: 4px;
+            font-weight: 600;
+        }
+
         /* LIVE TOTAL BAR */
         .total-container {
             background-color: #4A2E2B;
@@ -144,7 +175,7 @@
             border: 2px solid #D4A373;
             border-radius: 8px;
             padding: 15px;
-            margin-top: 24px;
+            margin-top: 14px;
             margin-bottom: 12px;
             display: flex;
             justify-content: space-between;
@@ -209,7 +240,8 @@
             <input type="hidden" name="_captcha" value="true">
             <input type="text" name="_honey" style="display:none">
             
-            <!-- Hidden field sent in email to show calculated total -->
+            <!-- Hidden fields sent in email for order pricing breakdown -->
+            <input type="hidden" id="hidden-discount-input" name="Applied Promo Discount" value="None">
             <input type="hidden" id="hidden-total-input" name="Estimated Order Total" value="$0.00">
 
             <!-- 1. CONTACT INFO -->
@@ -359,9 +391,23 @@
                 <textarea name="Special Notes" rows="3" placeholder="Tell us any specific preferences, metallic accents, or molding requests..."></textarea>
             </div>
 
+            <!-- PROMO CODE SECTION -->
+            <div class="section-title">6. Promo Code & Order Summary</div>
+            <div class="form-group">
+                <label>Have a promo code?</label>
+                <div class="promo-container">
+                    <input type="text" id="promo-code-input" name="Entered Promo Code" class="promo-input" placeholder="Enter code (e.g. DIPPEDCO10)">
+                    <button type="button" class="promo-btn" onclick="applyPromoCode()">Apply</button>
+                </div>
+                <div id="promo-msg" class="promo-msg"></div>
+            </div>
+
             <!-- LIVE RUNNING TOTAL DISPLAY -->
             <div class="total-container">
-                <div class="total-title">Estimated Total</div>
+                <div>
+                    <div class="total-title">Estimated Total</div>
+                    <div id="subtotal-breakdown" style="font-size: 8.5pt; color: #D4A373; display: none;"></div>
+                </div>
                 <div class="total-amount" id="total-display">$0.00</div>
             </div>
 
@@ -375,8 +421,10 @@
         </div>
     </div>
 
-    <!-- JAVASCRIPT FOR DYNAMIC CALCULATIONS & FLAVOR SECTIONS -->
+    <!-- JAVASCRIPT FOR DYNAMIC CALCULATIONS & PROMO CODE -->
     <script>
+        let isPromoApplied = false;
+
         function handleBoxChange() {
             toggleBoxOptions();
             updateBoxPrices();
@@ -430,14 +478,33 @@
             const upgradeSelected = document.querySelector('input[name="Cakesicle Upgrade"]:checked');
             const isUpgraded = (upgradeSelected && upgradeSelected.value === "Yes, Upgrade");
 
-            // Update displayed box card prices based on upgrade choice
             document.getElementById('mini-box-price-display').innerText = isUpgraded ? "$31.00" : "$28.00";
             document.getElementById('sig-box-price-display').innerText = isUpgraded ? "$51.00" : "$45.00";
             document.getElementById('cel-box-price-display').innerText = isUpgraded ? "$92.00" : "$80.00";
         }
 
+        function applyPromoCode() {
+            const codeInput = document.getElementById('promo-code-input').value.trim().toUpperCase();
+            const promoMsg = document.getElementById('promo-msg');
+
+            if (codeInput === 'DIPPEDCO10') {
+                isPromoApplied = true;
+                promoMsg.style.color = '#2E7D32';
+                promoMsg.innerText = '✓ Promo Code DIPPEDCO10 Applied! (10% Off)';
+            } else if (codeInput === '') {
+                isPromoApplied = false;
+                promoMsg.innerText = '';
+            } else {
+                isPromoApplied = false;
+                promoMsg.style.color = '#C62828';
+                promoMsg.innerText = '❌ Invalid Promo Code. Please try again.';
+            }
+
+            calculateTotal();
+        }
+
         function calculateTotal() {
-            let total = 0;
+            let subtotal = 0;
 
             // 1. Box Choice Calculation
             const selectedBox = document.querySelector('input[name="Box Choice"]:checked');
@@ -449,7 +516,7 @@
                 if (upgradeSelected && upgradeSelected.value === "Yes, Upgrade") {
                     basePrice += upgradeCost;
                 }
-                total += basePrice;
+                subtotal += basePrice;
             }
 
             // 2. A La Carte Calculations
@@ -458,10 +525,28 @@
             const krispies = (parseInt(document.getElementById('krispies-qty').value) || 0) * 36;
             const cakesicles = (parseInt(document.getElementById('cakesicles-qty').value) || 0) * 48;
 
-            total += (pretzels + oreos + krispies + cakesicles);
+            subtotal += (pretzels + oreos + krispies + cakesicles);
 
-            // 3. Update Display & Hidden Form Input
-            const formattedTotal = "$" + total.toFixed(2);
+            // 3. Discount Calculation
+            let discountAmount = 0;
+            if (isPromoApplied) {
+                discountAmount = subtotal * 0.10;
+            }
+
+            let finalTotal = subtotal - discountAmount;
+
+            // 4. Update UI Display & Hidden Input Fields
+            const subtotalBreakdown = document.getElementById('subtotal-breakdown');
+            if (isPromoApplied && subtotal > 0) {
+                subtotalBreakdown.style.display = 'block';
+                subtotalBreakdown.innerText = `Subtotal: $${subtotal.toFixed(2)} | 10% Off: -$${discountAmount.toFixed(2)}`;
+                document.getElementById('hidden-discount-input').value = `DIPPEDCO10 (-$${discountAmount.toFixed(2)})`;
+            } else {
+                subtotalBreakdown.style.display = 'none';
+                document.getElementById('hidden-discount-input').value = isPromoApplied ? "DIPPEDCO10 (10% Off)" : "None";
+            }
+
+            const formattedTotal = "$" + finalTotal.toFixed(2);
             document.getElementById('total-display').innerText = formattedTotal;
             document.getElementById('hidden-total-input').value = formattedTotal;
         }
