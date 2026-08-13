@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dipped Co. Sweets - Order Request Form</title>
+
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
@@ -159,14 +163,8 @@
             letter-spacing: 1px;
             text-transform: uppercase;
         }
-        .promo-btn:hover {
-            background-color: #c29263;
-        }
-        .promo-msg {
-            font-size: 8.5pt;
-            margin-top: 4px;
-            font-weight: 600;
-        }
+        .promo-btn:hover { background-color: #c29263; }
+        .promo-msg { font-size: 8.5pt; margin-top: 4px; font-weight: 600; }
 
         /* LIVE TOTAL BAR */
         .total-container {
@@ -188,16 +186,9 @@
             letter-spacing: 1px;
             color: #D4A373;
         }
-        .total-amount {
-            font-size: 18pt;
-            font-weight: bold;
-            color: #FFFFFF;
-        }
+        .total-amount { font-size: 18pt; font-weight: bold; color: #FFFFFF; }
 
-        .btn-container {
-            text-align: center;
-            margin-top: 10px;
-        }
+        .btn-container { text-align: center; margin-top: 10px; }
         .submit-btn {
             background-color: #4A2E2B;
             color: #F4EAE1;
@@ -234,13 +225,12 @@
             Please fill out this form to request your custom dipped treats. We will review your request and contact you shortly to confirm design details!
         </div>
 
-        <form action="https://formsubmit.co/dippedco.sweets@gmail.com" method="POST" enctype="multipart/form-data">
+        <form id="order-form" action="https://formsubmit.co/dippedco.sweets@gmail.com" method="POST" enctype="multipart/form-data" onsubmit="handleFormSubmit(event)">
             <!-- Form Settings: CAPTCHA ENABLED -->
             <input type="hidden" name="_subject" value="New Custom Order Request - Dipped Co. Sweets">
             <input type="hidden" name="_captcha" value="true">
             <input type="text" name="_honey" style="display:none">
             
-            <!-- Hidden fields sent in email for order pricing breakdown -->
             <input type="hidden" id="hidden-discount-input" name="Applied Promo Discount" value="None">
             <input type="hidden" id="hidden-total-input" name="Estimated Order Total" value="$0.00">
 
@@ -249,11 +239,11 @@
             <div class="form-group grid-2">
                 <div>
                     <label>Full Name *</label>
-                    <input type="text" name="Full Name" required placeholder="Jane Doe">
+                    <input type="text" id="full-name" name="Full Name" required placeholder="Jane Doe">
                 </div>
                 <div>
                     <label>Email Address *</label>
-                    <input type="email" name="Email Address" required placeholder="jane@example.com">
+                    <input type="email" id="email-address" name="Email Address" required placeholder="jane@example.com">
                 </div>
             </div>
             <div class="form-group grid-2">
@@ -269,11 +259,11 @@
             <div class="form-group grid-2">
                 <div>
                     <label>Desired Pickup Date *</label>
-                    <input type="date" name="Desired Pickup Date" required>
+                    <input type="date" id="pickup-date" name="Desired Pickup Date" required>
                 </div>
                 <div>
                     <label>Order Type</label>
-                    <select name="Pickup or Delivery">
+                    <select id="order-type" name="Pickup or Delivery">
                         <option value="Pickup">Local Pickup</option>
                         <option value="Delivery">Delivery (If available)</option>
                     </select>
@@ -298,7 +288,6 @@
                 <div class="option-desc">8 Pretzel Rods, 8 Rice Krispie Treats, 8 Dipped Oreos</div>
             </div>
 
-            <!-- DYNAMIC INSTAGRAM THEMED BOX OPTION -->
             <div id="themed-box-section" class="sub-option-box">
                 <label style="font-size: 9.5pt; margin-bottom: 6px;">Is this for a featured Instagram collection/theme?</label>
                 <div style="display: flex; gap: 20px; margin-bottom: 8px;">
@@ -342,7 +331,6 @@
                 </div>
             </div>
 
-            <!-- DYNAMIC CAKESICLE FLAVOR SECTION -->
             <div id="cakesicle-flavor-box" class="sub-option-box">
                 <label style="font-size: 9.5pt;">Select Your Cakesicle Flavor:</label>
                 <div class="flavor-grid">
@@ -351,9 +339,6 @@
                     <label style="font-weight: normal; cursor: pointer;"><input type="radio" name="Cakesicle Flavor" value="Strawberry" onclick="toggleRadio(this)"> Strawberry</label>
                     <label style="font-weight: normal; cursor: pointer;"><input type="radio" name="Cakesicle Flavor" value="Funfetti" onclick="toggleRadio(this)"> Funfetti</label>
                     <label style="font-weight: normal; cursor: pointer;"><input type="radio" name="Cakesicle Flavor" value="Seasonal" onclick="toggleRadio(this)"> Seasonal</label>
-                </div>
-                <div class="flavor-note">
-                    * If Seasonal is selected, please check Instagram for current flavors and write your flavor preference in the notes section below.
                 </div>
             </div>
 
@@ -365,7 +350,7 @@
                 </div>
                 <div class="form-group" style="margin-bottom: 0;">
                     <label style="margin-top: 6px;">Food Allergies or Dietary Restrictions</label>
-                    <input type="text" name="Food Allergies & Restrictions" placeholder="Specify any allergies (e.g. Milk, Soy, Wheat, Peanuts) or type 'None'">
+                    <input type="text" id="allergies-input" name="Food Allergies & Restrictions" placeholder="Specify any allergies or type 'None'">
                 </div>
             </div>
 
@@ -373,22 +358,19 @@
             <div class="section-title">5. Design & Event Details</div>
             <div class="form-group">
                 <label>Event Theme / Occasion</label>
-                <input type="text" name="Event Theme" placeholder="e.g. Birthday, Baby Shower, 4th of July">
+                <input type="text" id="theme-input" name="Event Theme" placeholder="e.g. Birthday, Baby Shower">
             </div>
             <div class="form-group">
                 <label>Color Scheme (Up to 4 colors)</label>
-                <input type="text" name="Color Scheme" placeholder="e.g. Blush Pink, White, Gold Accents">
+                <input type="text" id="colors-input" name="Color Scheme" placeholder="e.g. Blush Pink, White, Gold">
             </div>
-
-            <!-- PHOTO UPLOAD FIELD -->
             <div class="form-group">
-                <label>Upload Inspiration Photo / Theme Reference (optional)</label>
+                <label>Upload Inspiration Photo (optional)</label>
                 <input type="file" name="Inspiration Image" accept="image/*">
             </div>
-
             <div class="form-group">
                 <label>Special Design Notes & Inspiration Ideas</label>
-                <textarea name="Special Notes" rows="3" placeholder="Tell us any specific preferences, metallic accents, or molding requests..."></textarea>
+                <textarea name="Special Notes" rows="3" placeholder="Tell us any specific preferences..."></textarea>
             </div>
 
             <!-- PROMO CODE SECTION -->
@@ -421,17 +403,20 @@
         </div>
     </div>
 
-    <!-- JAVASCRIPT FOR DYNAMIC CALCULATIONS & DESELECT FUNCTIONALITY -->
+    <!-- JAVASCRIPT & EMAILJS LOGIC -->
     <script>
+        // INITIALIZE EMAILJS WITH YOUR PUBLIC KEY
+        (function() {
+            emailjs.init(obXOukGPZaY05m0f5);
+        })();
+
         let isPromoApplied = false;
 
-        // Custom toggle script to allow unselecting radio buttons
         function toggleRadio(element) {
             if (element.getAttribute('data-waschecked') === 'true') {
                 element.checked = false;
                 element.setAttribute('data-waschecked', 'false');
             } else {
-                // Clear state for all radios in the same group
                 const group = document.getElementsByName(element.name);
                 for (let i = 0; i < group.length; i++) {
                     group[i].setAttribute('data-waschecked', 'false');
@@ -486,11 +471,6 @@
                 flavorBox.style.display = 'block';
             } else {
                 flavorBox.style.display = 'none';
-                const flavorRadios = document.querySelectorAll('input[name="Cakesicle Flavor"]');
-                flavorRadios.forEach(radio => {
-                    radio.checked = false;
-                    radio.setAttribute('data-waschecked', 'false');
-                });
             }
         }
 
@@ -526,7 +506,6 @@
         function calculateTotal() {
             let subtotal = 0;
 
-            // 1. Box Choice Calculation
             const selectedBox = document.querySelector('input[name="Box Choice"]:checked');
             if (selectedBox) {
                 let basePrice = parseFloat(selectedBox.getAttribute('data-base-price')) || 0;
@@ -539,7 +518,6 @@
                 subtotal += basePrice;
             }
 
-            // 2. A La Carte Calculations
             const pretzels = (parseInt(document.getElementById('pretzels-qty').value) || 0) * 30;
             const oreos = (parseInt(document.getElementById('oreos-qty').value) || 0) * 30;
             const krispies = (parseInt(document.getElementById('krispies-qty').value) || 0) * 36;
@@ -547,7 +525,6 @@
 
             subtotal += (pretzels + oreos + krispies + cakesicles);
 
-            // 3. Discount Calculation
             let discountAmount = 0;
             if (isPromoApplied) {
                 discountAmount = subtotal * 0.10;
@@ -555,7 +532,6 @@
 
             let finalTotal = subtotal - discountAmount;
 
-            // 4. Update UI Display & Hidden Input Fields
             const subtotalBreakdown = document.getElementById('subtotal-breakdown');
             if (isPromoApplied && subtotal > 0) {
                 subtotalBreakdown.style.display = 'block';
@@ -569,6 +545,43 @@
             const formattedTotal = "$" + finalTotal.toFixed(2);
             document.getElementById('total-display').innerText = formattedTotal;
             document.getElementById('hidden-total-input').value = formattedTotal;
+        }
+
+        // TRIGGER EMAILJS UPON FORM SUBMISSION
+        function handleFormSubmit(event) {
+            const boxChoice = document.querySelector('input[name="Box Choice"]:checked')?.value || "None";
+            const upgradeChoice = document.querySelector('input[name="Cakesicle Upgrade"]:checked')?.value || "No Upgrade";
+            const theme = document.getElementById('theme-input').value || "N/A";
+            const colors = document.getElementById('colors-input').value || "N/A";
+
+            // Build A La Carte text
+            let alaCarte = [];
+            const p = document.getElementById('pretzels-qty').value;
+            const o = document.getElementById('oreos-qty').value;
+            const k = document.getElementById('krispies-qty').value;
+            const c = document.getElementById('cakesicles-qty').value;
+            if(p > 0) alaCarte.push(`${p} Doz Pretzels`);
+            if(o > 0) alaCarte.push(`${o} Doz Oreos`);
+            if(k > 0) alaCarte.push(`${k} Doz Krispies`);
+            if(c > 0) alaCarte.push(`${c} Doz Cakesicles`);
+
+            // EmailJS template parameters
+            const templateParams = {
+                full_name: document.getElementById('full-name').value,
+                email_address: document.getElementById('email-address').value,
+                pickup_date: document.getElementById('pickup-date').value,
+                order_type: document.getElementById('order-type').value,
+                box_choice: boxChoice,
+                cakesicle_upgrade: upgradeChoice,
+                a_la_carte_summary: alaCarte.length > 0 ? alaCarte.join(', ') : "None",
+                theme_colors: `${theme} (${colors})`,
+                allergies: document.getElementById('allergies-input').value || "None",
+                promo_discount: document.getElementById('hidden-discount-input').value,
+                estimated_total: document.getElementById('hidden-total-input').value
+            };
+
+            // Send confirmation email via EmailJS
+            emailjs.send(service_4czvnwl, template_fuit15r, templateParams);
         }
     </script>
 
