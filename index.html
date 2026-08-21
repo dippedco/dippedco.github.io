@@ -405,185 +405,197 @@
 
     <!-- JAVASCRIPT & EMAILJS LOGIC -->
     <script>
-        // INITIALIZE EMAILJS WITH YOUR PUBLIC KEY
-        (function() {
-            emailjs.init("obXOukGPZaY05m0f5");
-        })();
+    // 1. INITIALIZE EMAILJS (Make sure your real Public Key is here!)
+    (function() {
+        emailjs.init("YOUR_PUBLIC_KEY_HERE");
+    })();
 
-        let isPromoApplied = false;
+    let isPromoApplied = false;
 
-        function toggleRadio(element) {
-            if (element.getAttribute('data-waschecked') === 'true') {
-                element.checked = false;
-                element.setAttribute('data-waschecked', 'false');
-            } else {
-                const group = document.getElementsByName(element.name);
-                for (let i = 0; i < group.length; i++) {
-                    group[i].setAttribute('data-waschecked', 'false');
-                }
-                element.setAttribute('data-waschecked', 'true');
+    function toggleRadio(element) {
+        if (element.getAttribute('data-waschecked') === 'true') {
+            element.checked = false;
+            element.setAttribute('data-waschecked', 'false');
+        } else {
+            const group = document.getElementsByName(element.name);
+            for (let i = 0; i < group.length; i++) {
+                group[i].setAttribute('data-waschecked', 'false');
             }
+            element.setAttribute('data-waschecked', 'true');
+        }
+    }
+
+    function handleBoxChange() {
+        toggleBoxOptions();
+        updateBoxPrices();
+        calculateTotal();
+    }
+
+    function handleUpgradeChange() {
+        toggleFlavorSection();
+        updateBoxPrices();
+        calculateTotal();
+    }
+
+    function handleAlaCarteCakesicleInput() {
+        toggleFlavorSection();
+        calculateTotal();
+    }
+
+    function toggleBoxOptions() {
+        const boxSelected = document.querySelector('input[name="Box Choice"]:checked');
+        const themedBoxSection = document.getElementById('themed-box-section');
+        if (boxSelected) {
+            themedBoxSection.style.display = 'block';
+        } else {
+            themedBoxSection.style.display = 'none';
+        }
+    }
+
+    function toggleFeaturedThemeInput() {
+        const isFeatured = document.querySelector('input[name="Is Advertised Theme"]:checked');
+        const themeInput = document.getElementById('featured-theme-input');
+        if (isFeatured && isFeatured.value === "Yes, Advertised Instagram Theme") {
+            themeInput.style.display = 'block';
+        } else {
+            themeInput.style.display = 'none';
+        }
+    }
+
+    function toggleFlavorSection() {
+        const upgradeSelected = document.querySelector('input[name="Cakesicle Upgrade"]:checked');
+        const cakesicleQty = parseInt(document.getElementById('cakesicles-qty').value) || 0;
+        const flavorBox = document.getElementById('cakesicle-flavor-box');
+
+        if ((upgradeSelected && upgradeSelected.value === "Yes, Upgrade") || cakesicleQty > 0) {
+            flavorBox.style.display = 'block';
+        } else {
+            flavorBox.style.display = 'none';
+        }
+    }
+
+    function updateBoxPrices() {
+        const upgradeSelected = document.querySelector('input[name="Cakesicle Upgrade"]:checked');
+        const isUpgraded = (upgradeSelected && upgradeSelected.value === "Yes, Upgrade");
+
+        document.getElementById('mini-box-price-display').innerText = isUpgraded ? "$31.00" : "$28.00";
+        document.getElementById('sig-box-price-display').innerText = isUpgraded ? "$51.00" : "$45.00";
+        document.getElementById('cel-box-price-display').innerText = isUpgraded ? "$92.00" : "$80.00";
+    }
+
+    function applyPromoCode() {
+        const codeInput = document.getElementById('promo-code-input').value.trim().toUpperCase();
+        const promoMsg = document.getElementById('promo-msg');
+
+        if (codeInput === 'DIPPEDCO10') {
+            isPromoApplied = true;
+            promoMsg.style.color = '#2E7D32';
+            promoMsg.innerText = '✓ Promo Code DIPPEDCO10 Applied! (10% Off)';
+        } else if (codeInput === '') {
+            isPromoApplied = false;
+            promoMsg.innerText = '';
+        } else {
+            isPromoApplied = false;
+            promoMsg.style.color = '#C62828';
+            promoMsg.innerText = '❌ Invalid Promo Code. Please try again.';
         }
 
-        function handleBoxChange() {
-            toggleBoxOptions();
-            updateBoxPrices();
-            calculateTotal();
-        }
+        calculateTotal();
+    }
 
-        function handleUpgradeChange() {
-            toggleFlavorSection();
-            updateBoxPrices();
-            calculateTotal();
-        }
+    function calculateTotal() {
+        let subtotal = 0;
 
-        function handleAlaCarteCakesicleInput() {
-            toggleFlavorSection();
-            calculateTotal();
-        }
-
-        function toggleBoxOptions() {
-            const boxSelected = document.querySelector('input[name="Box Choice"]:checked');
-            const themedBoxSection = document.getElementById('themed-box-section');
-            if (boxSelected) {
-                themedBoxSection.style.display = 'block';
-            } else {
-                themedBoxSection.style.display = 'none';
-            }
-        }
-
-        function toggleFeaturedThemeInput() {
-            const isFeatured = document.querySelector('input[name="Is Advertised Theme"]:checked');
-            const themeInput = document.getElementById('featured-theme-input');
-            if (isFeatured && isFeatured.value === "Yes, Advertised Instagram Theme") {
-                themeInput.style.display = 'block';
-            } else {
-                themeInput.style.display = 'none';
-            }
-        }
-
-        function toggleFlavorSection() {
+        const selectedBox = document.querySelector('input[name="Box Choice"]:checked');
+        if (selectedBox) {
+            let basePrice = parseFloat(selectedBox.getAttribute('data-base-price')) || 0;
+            let upgradeCost = parseFloat(selectedBox.getAttribute('data-upgrade-cost')) || 0;
+            
             const upgradeSelected = document.querySelector('input[name="Cakesicle Upgrade"]:checked');
-            const cakesicleQty = parseInt(document.getElementById('cakesicles-qty').value) || 0;
-            const flavorBox = document.getElementById('cakesicle-flavor-box');
-
-            if ((upgradeSelected && upgradeSelected.value === "Yes, Upgrade") || cakesicleQty > 0) {
-                flavorBox.style.display = 'block';
-            } else {
-                flavorBox.style.display = 'none';
+            if (upgradeSelected && upgradeSelected.value === "Yes, Upgrade") {
+                basePrice += upgradeCost;
             }
+            subtotal += basePrice;
         }
 
-        function updateBoxPrices() {
-            const upgradeSelected = document.querySelector('input[name="Cakesicle Upgrade"]:checked');
-            const isUpgraded = (upgradeSelected && upgradeSelected.value === "Yes, Upgrade");
+        const pretzels = (parseInt(document.getElementById('pretzels-qty').value) || 0) * 30;
+        const oreos = (parseInt(document.getElementById('oreos-qty').value) || 0) * 30;
+        const krispies = (parseInt(document.getElementById('krispies-qty').value) || 0) * 36;
+        const cakesicles = (parseInt(document.getElementById('cakesicles-qty').value) || 0) * 48;
 
-            document.getElementById('mini-box-price-display').innerText = isUpgraded ? "$31.00" : "$28.00";
-            document.getElementById('sig-box-price-display').innerText = isUpgraded ? "$51.00" : "$45.00";
-            document.getElementById('cel-box-price-display').innerText = isUpgraded ? "$92.00" : "$80.00";
+        subtotal += (pretzels + oreos + krispies + cakesicles);
+
+        let discountAmount = 0;
+        if (isPromoApplied) {
+            discountAmount = subtotal * 0.10;
         }
 
-        function applyPromoCode() {
-            const codeInput = document.getElementById('promo-code-input').value.trim().toUpperCase();
-            const promoMsg = document.getElementById('promo-msg');
+        let finalTotal = subtotal - discountAmount;
 
-            if (codeInput === 'DIPPEDCO10') {
-                isPromoApplied = true;
-                promoMsg.style.color = '#2E7D32';
-                promoMsg.innerText = '✓ Promo Code DIPPEDCO10 Applied! (10% Off)';
-            } else if (codeInput === '') {
-                isPromoApplied = false;
-                promoMsg.innerText = '';
-            } else {
-                isPromoApplied = false;
-                promoMsg.style.color = '#C62828';
-                promoMsg.innerText = '❌ Invalid Promo Code. Please try again.';
-            }
-
-            calculateTotal();
+        const subtotalBreakdown = document.getElementById('subtotal-breakdown');
+        if (isPromoApplied && subtotal > 0) {
+            subtotalBreakdown.style.display = 'block';
+            subtotalBreakdown.innerText = `Subtotal: $${subtotal.toFixed(2)} | 10% Off: -$${discountAmount.toFixed(2)}`;
+            document.getElementById('hidden-discount-input').value = `DIPPEDCO10 (-$${discountAmount.toFixed(2)})`;
+        } else {
+            subtotalBreakdown.style.display = 'none';
+            document.getElementById('hidden-discount-input').value = isPromoApplied ? "DIPPEDCO10 (10% Off)" : "None";
         }
 
-        function calculateTotal() {
-            let subtotal = 0;
+        const formattedTotal = "$" + finalTotal.toFixed(2);
+        document.getElementById('total-display').innerText = formattedTotal;
+        document.getElementById('hidden-total-input').value = formattedTotal;
+    }
 
-            const selectedBox = document.querySelector('input[name="Box Choice"]:checked');
-            if (selectedBox) {
-                let basePrice = parseFloat(selectedBox.getAttribute('data-base-price')) || 0;
-                let upgradeCost = parseFloat(selectedBox.getAttribute('data-upgrade-cost')) || 0;
-                
-                const upgradeSelected = document.querySelector('input[name="Cakesicle Upgrade"]:checked');
-                if (upgradeSelected && upgradeSelected.value === "Yes, Upgrade") {
-                    basePrice += upgradeCost;
-                }
-                subtotal += basePrice;
-            }
+    // 2. FIXED MOBILE SUBMIT HANDLER
+    async function handleFormSubmit(event) {
+        event.preventDefault(); // Pause standard submit so EmailJS has time on mobile
+        
+        const form = event.target;
+        const submitBtn = form.querySelector('.submit-btn');
+        submitBtn.innerText = "Submitting...";
+        submitBtn.disabled = true;
 
-            const pretzels = (parseInt(document.getElementById('pretzels-qty').value) || 0) * 30;
-            const oreos = (parseInt(document.getElementById('oreos-qty').value) || 0) * 30;
-            const krispies = (parseInt(document.getElementById('krispies-qty').value) || 0) * 36;
-            const cakesicles = (parseInt(document.getElementById('cakesicles-qty').value) || 0) * 48;
+        const boxChoice = document.querySelector('input[name="Box Choice"]:checked')?.value || "None";
+        const upgradeChoice = document.querySelector('input[name="Cakesicle Upgrade"]:checked')?.value || "No Upgrade";
+        const theme = document.getElementById('theme-input').value || "N/A";
+        const colors = document.getElementById('colors-input').value || "N/A";
 
-            subtotal += (pretzels + oreos + krispies + cakesicles);
+        let alaCarte = [];
+        const p = document.getElementById('pretzels-qty').value;
+        const o = document.getElementById('oreos-qty').value;
+        const k = document.getElementById('krispies-qty').value;
+        const c = document.getElementById('cakesicles-qty').value;
+        if(p > 0) alaCarte.push(`${p} Doz Pretzels`);
+        if(o > 0) alaCarte.push(`${o} Doz Oreos`);
+        if(k > 0) alaCarte.push(`${k} Doz Krispies`);
+        if(c > 0) alaCarte.push(`${c} Doz Cakesicles`);
 
-            let discountAmount = 0;
-            if (isPromoApplied) {
-                discountAmount = subtotal * 0.10;
-            }
+        const templateParams = {
+            full_name: document.getElementById('full-name').value,
+            email_address: document.getElementById('email-address').value,
+            pickup_date: document.getElementById('pickup-date').value,
+            order_type: document.getElementById('order-type').value,
+            box_choice: boxChoice,
+            cakesicle_upgrade: upgradeChoice,
+            a_la_carte_summary: alaCarte.length > 0 ? alaCarte.join(', ') : "None",
+            theme_colors: `${theme} (${colors})`,
+            allergies: document.getElementById('allergies-input').value || "None",
+            promo_discount: document.getElementById('hidden-discount-input').value,
+            estimated_total: document.getElementById('hidden-total-input').value
+        };
 
-            let finalTotal = subtotal - discountAmount;
-
-            const subtotalBreakdown = document.getElementById('subtotal-breakdown');
-            if (isPromoApplied && subtotal > 0) {
-                subtotalBreakdown.style.display = 'block';
-                subtotalBreakdown.innerText = `Subtotal: $${subtotal.toFixed(2)} | 10% Off: -$${discountAmount.toFixed(2)}`;
-                document.getElementById('hidden-discount-input').value = `DIPPEDCO10 (-$${discountAmount.toFixed(2)})`;
-            } else {
-                subtotalBreakdown.style.display = 'none';
-                document.getElementById('hidden-discount-input').value = isPromoApplied ? "DIPPEDCO10 (10% Off)" : "None";
-            }
-
-            const formattedTotal = "$" + finalTotal.toFixed(2);
-            document.getElementById('total-display').innerText = formattedTotal;
-            document.getElementById('hidden-total-input').value = formattedTotal;
+        try {
+            // Send email through EmailJS first
+            await emailjs.send('YOUR_SERVICE_ID_HERE', 'YOUR_TEMPLATE_ID_HERE', templateParams);
+        } catch (error) {
+            console.error("EmailJS Mobile Error:", error);
+        } finally {
+            // Now submit the form to FormSubmit so you get your email notification too!
+            form.submit();
         }
-
-        // TRIGGER EMAILJS UPON FORM SUBMISSION
-        function handleFormSubmit(event) {
-            const boxChoice = document.querySelector('input[name="Box Choice"]:checked')?.value || "None";
-            const upgradeChoice = document.querySelector('input[name="Cakesicle Upgrade"]:checked')?.value || "No Upgrade";
-            const theme = document.getElementById('theme-input').value || "N/A";
-            const colors = document.getElementById('colors-input').value || "N/A";
-
-            // Build A La Carte text
-            let alaCarte = [];
-            const p = document.getElementById('pretzels-qty').value;
-            const o = document.getElementById('oreos-qty').value;
-            const k = document.getElementById('krispies-qty').value;
-            const c = document.getElementById('cakesicles-qty').value;
-            if(p > 0) alaCarte.push(`${p} Doz Pretzels`);
-            if(o > 0) alaCarte.push(`${o} Doz Oreos`);
-            if(k > 0) alaCarte.push(`${k} Doz Krispies`);
-            if(c > 0) alaCarte.push(`${c} Doz Cakesicles`);
-
-            // EmailJS template parameters
-            const templateParams = {
-                full_name: document.getElementById('full-name').value,
-                email_address: document.getElementById('email-address').value,
-                pickup_date: document.getElementById('pickup-date').value,
-                order_type: document.getElementById('order-type').value,
-                box_choice: boxChoice,
-                cakesicle_upgrade: upgradeChoice,
-                a_la_carte_summary: alaCarte.length > 0 ? alaCarte.join(', ') : "None",
-                theme_colors: `${theme} (${colors})`,
-                allergies: document.getElementById('allergies-input').value || "None",
-                promo_discount: document.getElementById('hidden-discount-input').value,
-                estimated_total: document.getElementById('hidden-total-input').value
-            };
-
-            // Send confirmation email via EmailJS
-            emailjs.send('service_4czvnwl', 'template_fuit15r', templateParams);
-        }
-    </script>
+    }
+</script>
 
 </body>
 </html>
