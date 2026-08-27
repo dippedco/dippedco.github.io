@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dipped Co. Sweets - Order Request Form</title>
 
+    <!-- EmailJS SDK -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 
     <style>
@@ -241,6 +242,7 @@
             <input type="hidden" id="hidden-discount-input" name="Applied Promo Discount" value="None">
             <input type="hidden" id="hidden-total-input" name="Estimated Order Total" value="$0.00">
 
+            <!-- 1. CONTACT INFO -->
             <div class="section-title">1. Client Contact Info</div>
             <div class="form-group grid-2">
                 <div>
@@ -255,7 +257,7 @@
             <div class="form-group grid-2">
                 <div>
                     <label>Phone Number (10 Digits) *</label>
-                    <input type="tel" id="phone-number" name="Phone Number" required placeholder="5551234567" pattern="[0-9]{10}" maxlength="10" oninput="cleanPhoneInput(this)">
+                    <input type="tel" id="phone-number" name="Phone Number" required placeholder="5551234567" pattern="[0-9]{10}" maxlength="10" inputmode="numeric" oninput="cleanPhoneInput(this)">
                     <div id="phone-error-msg" class="error-msg">⚠️ Please enter a valid 10-digit phone number (digits only).</div>
                 </div>
                 <div>
@@ -277,6 +279,7 @@
                 </div>
             </div>
 
+            <!-- 2. BOX SELECTION (MULTIPLE QUANTITIES ALLOWED) -->
             <div class="section-title">2. Select Your Box Choice(s)</div>
             
             <div class="option-card">
@@ -287,7 +290,7 @@
                 <div class="option-desc">2 Pretzel Rods, 2 Rice Krispie Treats, 2 Dipped Oreos</div>
                 <div style="display: flex; align-items: center; gap: 10px;">
                     <label style="font-size: 8.5pt; margin-bottom: 0;">Quantity:</label>
-                    <input type="number" id="mini-box-qty" name="Mini Box Quantity" min="0" placeholder="0" style="width: 80px;" oninput="handleBoxChange()">
+                    <input type="number" id="mini-box-qty" name="Mini Box Quantity" min="0" placeholder="0" inputmode="numeric" style="width: 80px;" oninput="handleBoxChange()">
                 </div>
             </div>
 
@@ -299,7 +302,7 @@
                 <div class="option-desc">4 Pretzel Rods, 4 Rice Krispie Treats, 4 Dipped Oreos</div>
                 <div style="display: flex; align-items: center; gap: 10px;">
                     <label style="font-size: 8.5pt; margin-bottom: 0;">Quantity:</label>
-                    <input type="number" id="sig-box-qty" name="Signature Box Quantity" min="0" placeholder="0" style="width: 80px;" oninput="handleBoxChange()">
+                    <input type="number" id="sig-box-qty" name="Signature Box Quantity" min="0" placeholder="0" inputmode="numeric" style="width: 80px;" oninput="handleBoxChange()">
                 </div>
             </div>
 
@@ -311,7 +314,7 @@
                 <div class="option-desc">8 Pretzel Rods, 8 Rice Krispie Treats, 8 Dipped Oreos</div>
                 <div style="display: flex; align-items: center; gap: 10px;">
                     <label style="font-size: 8.5pt; margin-bottom: 0;">Quantity:</label>
-                    <input type="number" id="cel-box-qty" name="Celebration Box Quantity" min="0" placeholder="0" style="width: 80px;" oninput="handleBoxChange()">
+                    <input type="number" id="cel-box-qty" name="Celebration Box Quantity" min="0" placeholder="0" inputmode="numeric" style="width: 80px;" oninput="handleBoxChange()">
                 </div>
             </div>
 
@@ -335,25 +338,26 @@
                 </div>
             </div>
 
+            <!-- 3. A LA CARTE -->
             <div class="section-title">3. A La Carte Dozens</div>
             <div class="form-group grid-2">
                 <div>
                     <label>Dipped Pretzels ($30/Doz)</label>
-                    <input type="number" id="pretzels-qty" name="Pretzel Dozens" min="0" placeholder="0" oninput="calculateTotal()">
+                    <input type="number" id="pretzels-qty" name="Pretzel Dozens" min="0" placeholder="0" inputmode="numeric" oninput="calculateTotal()">
                 </div>
                 <div>
                     <label>Dipped Oreos ($30/Doz)</label>
-                    <input type="number" id="oreos-qty" name="Oreo Dozens" min="0" placeholder="0" oninput="calculateTotal()">
+                    <input type="number" id="oreos-qty" name="Oreo Dozens" min="0" placeholder="0" inputmode="numeric" oninput="calculateTotal()">
                 </div>
             </div>
             <div class="form-group grid-2">
                 <div>
                     <label>Rice Krispie Treats ($36/Doz)</label>
-                    <input type="number" id="krispies-qty" name="Krispie Dozens" min="0" placeholder="0" oninput="calculateTotal()">
+                    <input type="number" id="krispies-qty" name="Krispie Dozens" min="0" placeholder="0" inputmode="numeric" oninput="calculateTotal()">
                 </div>
                 <div>
                     <label>Dipped Cakesicles ($48/Doz)</label>
-                    <input type="number" id="cakesicles-qty" name="Cakesicle Dozens" min="0" placeholder="0" oninput="handleAlaCarteCakesicleInput()">
+                    <input type="number" id="cakesicles-qty" name="Cakesicle Dozens" min="0" placeholder="0" inputmode="numeric" oninput="handleAlaCarteCakesicleInput()">
                 </div>
             </div>
 
@@ -368,6 +372,7 @@
                 </div>
             </div>
 
+            <!-- 4. ALLERGY INFORMATION -->
             <div class="section-title">4. Allergy Information & Disclosure</div>
             <div class="allergy-box">
                 <div class="allergy-notice">
@@ -379,6 +384,7 @@
                 </div>
             </div>
 
+            <!-- 5. CUSTOMIZATION -->
             <div class="section-title">5. Design & Event Details</div>
             <div class="form-group">
                 <label>Event Theme / Occasion</label>
@@ -397,6 +403,7 @@
                 <textarea name="Special Notes" rows="3" placeholder="Tell us any specific preferences..."></textarea>
             </div>
 
+            <!-- PROMO CODE SECTION -->
             <div class="section-title">6. Promo Code & Order Summary</div>
             <div class="form-group">
                 <label>Have a promo code?</label>
@@ -407,6 +414,7 @@
                 <div id="promo-msg" class="promo-msg"></div>
             </div>
 
+            <!-- LIVE RUNNING TOTAL DISPLAY -->
             <div class="total-container">
                 <div>
                     <div class="total-title">Estimated Total</div>
@@ -425,6 +433,7 @@
         </div>
     </div>
 
+    <!-- JAVASCRIPT & EMAILJS LOGIC -->
     <script>
         (function() {
             emailjs.init("obXOukGPZaY05m0f5");
@@ -528,7 +537,6 @@
             const upgradeSelected = document.querySelector('input[name="Cakesicle Upgrade"]:checked');
             const isUpgraded = (upgradeSelected && upgradeSelected.value === "Yes, Upgrade");
 
-            // Box Calculations with Quantities
             const miniQty = parseInt(document.getElementById('mini-box-qty').value) || 0;
             const sigQty = parseInt(document.getElementById('sig-box-qty').value) || 0;
             const celQty = parseInt(document.getElementById('cel-box-qty').value) || 0;
@@ -539,7 +547,6 @@
 
             subtotal += (miniQty * miniPrice) + (sigQty * sigPrice) + (celQty * celPrice);
 
-            // A La Carte Calculations
             const pretzels = (parseInt(document.getElementById('pretzels-qty').value) || 0) * 30;
             const oreos = (parseInt(document.getElementById('oreos-qty').value) || 0) * 30;
             const krispies = (parseInt(document.getElementById('krispies-qty').value) || 0) * 36;
@@ -591,7 +598,6 @@
             submitBtn.innerText = "Submitting...";
             submitBtn.disabled = true;
 
-            // Build Box Summary
             let boxes = [];
             const mini = parseInt(document.getElementById('mini-box-qty').value) || 0;
             const sig = parseInt(document.getElementById('sig-box-qty').value) || 0;
