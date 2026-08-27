@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dipped Co. Sweets - Order Request Form</title>
 
-    <!-- EmailJS SDK -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 
     <style>
@@ -106,13 +105,18 @@
             background-color: #F8F4F0;
             border: 1px solid #E6DDD5;
             border-radius: 6px;
-            padding: 10px;
-            margin-bottom: 8px;
-            cursor: pointer;
+            padding: 12px;
+            margin-bottom: 10px;
+        }
+        .option-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
         }
         .option-title { font-weight: bold; color: #4A2E2B; font-size: 10pt; }
-        .option-desc { font-size: 8.5pt; color: #66524E; margin-top: 2px; }
-        .option-price { float: right; font-weight: bold; color: #8C4A32; font-size: 10pt; }
+        .option-desc { font-size: 8.5pt; color: #66524E; margin-bottom: 8px; }
+        .option-price { font-weight: bold; color: #8C4A32; font-size: 10pt; }
         
         .sub-option-box {
             display: none;
@@ -230,7 +234,6 @@
         </div>
 
         <form id="order-form" action="https://formsubmit.co/dippedco.sweets@gmail.com" method="POST" enctype="multipart/form-data" onsubmit="handleFormSubmit(event)">
-            <!-- Form Settings: CAPTCHA ENABLED -->
             <input type="hidden" name="_subject" value="New Custom Order Request - Dipped Co. Sweets">
             <input type="hidden" name="_captcha" value="true">
             <input type="text" name="_honey" style="display:none">
@@ -238,7 +241,6 @@
             <input type="hidden" id="hidden-discount-input" name="Applied Promo Discount" value="None">
             <input type="hidden" id="hidden-total-input" name="Estimated Order Total" value="$0.00">
 
-            <!-- 1. CONTACT INFO -->
             <div class="section-title">1. Client Contact Info</div>
             <div class="form-group grid-2">
                 <div>
@@ -275,22 +277,42 @@
                 </div>
             </div>
 
-            <!-- 2. BOX SELECTION -->
-            <div class="section-title">2. Select Your Box Choice</div>
+            <div class="section-title">2. Select Your Box Choice(s)</div>
+            
             <div class="option-card">
-                <span class="option-price" id="mini-box-price-display">$28.00</span>
-                <div class="option-title"><input type="radio" name="Box Choice" value="The Mini Box" data-base-price="28" data-upgrade-cost="3" onclick="toggleRadio(this); handleBoxChange();"> The Mini Box (1/2 Dozen)</div>
+                <div class="option-header">
+                    <span class="option-title">The Mini Box (1/2 Dozen)</span>
+                    <span class="option-price" id="mini-box-price-display">$28.00 ea</span>
+                </div>
                 <div class="option-desc">2 Pretzel Rods, 2 Rice Krispie Treats, 2 Dipped Oreos</div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <label style="font-size: 8.5pt; margin-bottom: 0;">Quantity:</label>
+                    <input type="number" id="mini-box-qty" name="Mini Box Quantity" min="0" placeholder="0" style="width: 80px;" oninput="handleBoxChange()">
+                </div>
             </div>
+
             <div class="option-card">
-                <span class="option-price" id="sig-box-price-display">$45.00</span>
-                <div class="option-title"><input type="radio" name="Box Choice" value="The Signature Box" data-base-price="45" data-upgrade-cost="6" onclick="toggleRadio(this); handleBoxChange();"> The Signature Box (1 Dozen)</div>
+                <div class="option-header">
+                    <span class="option-title">The Signature Box (1 Dozen)</span>
+                    <span class="option-price" id="sig-box-price-display">$45.00 ea</span>
+                </div>
                 <div class="option-desc">4 Pretzel Rods, 4 Rice Krispie Treats, 4 Dipped Oreos</div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <label style="font-size: 8.5pt; margin-bottom: 0;">Quantity:</label>
+                    <input type="number" id="sig-box-qty" name="Signature Box Quantity" min="0" placeholder="0" style="width: 80px;" oninput="handleBoxChange()">
+                </div>
             </div>
+
             <div class="option-card">
-                <span class="option-price" id="cel-box-price-display">$80.00</span>
-                <div class="option-title"><input type="radio" name="Box Choice" value="The Celebration Box" data-base-price="80" data-upgrade-cost="12" onclick="toggleRadio(this); handleBoxChange();"> The Celebration Box (2 Dozen)</div>
+                <div class="option-header">
+                    <span class="option-title">The Celebration Box (2 Dozen)</span>
+                    <span class="option-price" id="cel-box-price-display">$80.00 ea</span>
+                </div>
                 <div class="option-desc">8 Pretzel Rods, 8 Rice Krispie Treats, 8 Dipped Oreos</div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <label style="font-size: 8.5pt; margin-bottom: 0;">Quantity:</label>
+                    <input type="number" id="cel-box-qty" name="Celebration Box Quantity" min="0" placeholder="0" style="width: 80px;" oninput="handleBoxChange()">
+                </div>
             </div>
 
             <div id="themed-box-section" class="sub-option-box">
@@ -308,12 +330,11 @@
             <div style="margin-top: 8px; margin-bottom: 12px; background-color: #F3EBE1; padding: 10px; border-radius: 6px;">
                 <label style="margin-bottom: 6px;">Cakesicle Upgrade (Swap Rice Krispies for Mini Cakesicles):</label>
                 <div style="display: flex; gap: 20px;">
-                    <label style="font-weight: normal; cursor: pointer;"><input type="radio" name="Cakesicle Upgrade" value="No Upgrade" checked onclick="toggleRadio(this); handleUpgradeChange();"> No Upgrade</label>
-                    <label style="font-weight: normal; cursor: pointer;"><input type="radio" name="Cakesicle Upgrade" value="Yes, Upgrade" onclick="toggleRadio(this); handleUpgradeChange();"> Yes, Upgrade</label>
+                    <label style="font-weight: normal; cursor: pointer;"><input type="radio" name="Cakesicle Upgrade" value="No Upgrade" checked onclick="handleUpgradeChange();"> No Upgrade</label>
+                    <label style="font-weight: normal; cursor: pointer;"><input type="radio" name="Cakesicle Upgrade" value="Yes, Upgrade" onclick="handleUpgradeChange();"> Yes, Upgrade</label>
                 </div>
             </div>
 
-            <!-- 3. A LA CARTE -->
             <div class="section-title">3. A La Carte Dozens</div>
             <div class="form-group grid-2">
                 <div>
@@ -339,15 +360,14 @@
             <div id="cakesicle-flavor-box" class="sub-option-box">
                 <label style="font-size: 9.5pt;">Select Your Cakesicle Flavor:</label>
                 <div class="flavor-grid">
-                    <label style="font-weight: normal; cursor: pointer;"><input type="radio" name="Cakesicle Flavor" value="Vanilla" onclick="toggleRadio(this)"> Vanilla</label>
-                    <label style="font-weight: normal; cursor: pointer;"><input type="radio" name="Cakesicle Flavor" value="Chocolate Fudge" onclick="toggleRadio(this)"> Chocolate Fudge</label>
-                    <label style="font-weight: normal; cursor: pointer;"><input type="radio" name="Cakesicle Flavor" value="Strawberry" onclick="toggleRadio(this)"> Strawberry</label>
-                    <label style="font-weight: normal; cursor: pointer;"><input type="radio" name="Cakesicle Flavor" value="Funfetti" onclick="toggleRadio(this)"> Funfetti</label>
-                    <label style="font-weight: normal; cursor: pointer;"><input type="radio" name="Cakesicle Flavor" value="Seasonal" onclick="toggleRadio(this)"> Seasonal</label>
+                    <label style="font-weight: normal; cursor: pointer;"><input type="radio" name="Cakesicle Flavor" value="Vanilla"> Vanilla</label>
+                    <label style="font-weight: normal; cursor: pointer;"><input type="radio" name="Cakesicle Flavor" value="Chocolate Fudge"> Chocolate Fudge</label>
+                    <label style="font-weight: normal; cursor: pointer;"><input type="radio" name="Cakesicle Flavor" value="Strawberry"> Strawberry</label>
+                    <label style="font-weight: normal; cursor: pointer;"><input type="radio" name="Cakesicle Flavor" value="Funfetti"> Funfetti</label>
+                    <label style="font-weight: normal; cursor: pointer;"><input type="radio" name="Cakesicle Flavor" value="Seasonal"> Seasonal</label>
                 </div>
             </div>
 
-            <!-- 4. ALLERGY INFORMATION -->
             <div class="section-title">4. Allergy Information & Disclosure</div>
             <div class="allergy-box">
                 <div class="allergy-notice">
@@ -359,7 +379,6 @@
                 </div>
             </div>
 
-            <!-- 5. CUSTOMIZATION -->
             <div class="section-title">5. Design & Event Details</div>
             <div class="form-group">
                 <label>Event Theme / Occasion</label>
@@ -378,7 +397,6 @@
                 <textarea name="Special Notes" rows="3" placeholder="Tell us any specific preferences..."></textarea>
             </div>
 
-            <!-- PROMO CODE SECTION -->
             <div class="section-title">6. Promo Code & Order Summary</div>
             <div class="form-group">
                 <label>Have a promo code?</label>
@@ -389,7 +407,6 @@
                 <div id="promo-msg" class="promo-msg"></div>
             </div>
 
-            <!-- LIVE RUNNING TOTAL DISPLAY -->
             <div class="total-container">
                 <div>
                     <div class="total-title">Estimated Total</div>
@@ -408,35 +425,19 @@
         </div>
     </div>
 
-    <!-- JAVASCRIPT & EMAILJS LOGIC -->
     <script>
-        // HARDCODED SAVED EMAILJS PUBLIC KEY
         (function() {
             emailjs.init("obXOukGPZaY05m0f5");
         })();
 
         let isPromoApplied = false;
 
-        // Strip non-digits automatically from phone field
         function cleanPhoneInput(input) {
             input.value = input.value.replace(/\D/g, '');
             const errorMsg = document.getElementById('phone-error-msg');
             if (input.value.length === 10) {
                 input.classList.remove('error-input');
                 errorMsg.style.display = 'none';
-            }
-        }
-
-        function toggleRadio(element) {
-            if (element.getAttribute('data-waschecked') === 'true') {
-                element.checked = false;
-                element.setAttribute('data-waschecked', 'false');
-            } else {
-                const group = document.getElementsByName(element.name);
-                for (let i = 0; i < group.length; i++) {
-                    group[i].setAttribute('data-waschecked', 'false');
-                }
-                element.setAttribute('data-waschecked', 'true');
             }
         }
 
@@ -458,9 +459,12 @@
         }
 
         function toggleBoxOptions() {
-            const boxSelected = document.querySelector('input[name="Box Choice"]:checked');
+            const miniQty = parseInt(document.getElementById('mini-box-qty').value) || 0;
+            const sigQty = parseInt(document.getElementById('sig-box-qty').value) || 0;
+            const celQty = parseInt(document.getElementById('cel-box-qty').value) || 0;
+            
             const themedBoxSection = document.getElementById('themed-box-section');
-            if (boxSelected) {
+            if (miniQty > 0 || sigQty > 0 || celQty > 0) {
                 themedBoxSection.style.display = 'block';
             } else {
                 themedBoxSection.style.display = 'none';
@@ -493,9 +497,9 @@
             const upgradeSelected = document.querySelector('input[name="Cakesicle Upgrade"]:checked');
             const isUpgraded = (upgradeSelected && upgradeSelected.value === "Yes, Upgrade");
 
-            document.getElementById('mini-box-price-display').innerText = isUpgraded ? "$31.00" : "$28.00";
-            document.getElementById('sig-box-price-display').innerText = isUpgraded ? "$51.00" : "$45.00";
-            document.getElementById('cel-box-price-display').innerText = isUpgraded ? "$92.00" : "$80.00";
+            document.getElementById('mini-box-price-display').innerText = isUpgraded ? "$31.00 ea" : "$28.00 ea";
+            document.getElementById('sig-box-price-display').innerText = isUpgraded ? "$51.00 ea" : "$45.00 ea";
+            document.getElementById('cel-box-price-display').innerText = isUpgraded ? "$92.00 ea" : "$80.00 ea";
         }
 
         function applyPromoCode() {
@@ -521,18 +525,21 @@
         function calculateTotal() {
             let subtotal = 0;
 
-            const selectedBox = document.querySelector('input[name="Box Choice"]:checked');
-            if (selectedBox) {
-                let basePrice = parseFloat(selectedBox.getAttribute('data-base-price')) || 0;
-                let upgradeCost = parseFloat(selectedBox.getAttribute('data-upgrade-cost')) || 0;
-                
-                const upgradeSelected = document.querySelector('input[name="Cakesicle Upgrade"]:checked');
-                if (upgradeSelected && upgradeSelected.value === "Yes, Upgrade") {
-                    basePrice += upgradeCost;
-                }
-                subtotal += basePrice;
-            }
+            const upgradeSelected = document.querySelector('input[name="Cakesicle Upgrade"]:checked');
+            const isUpgraded = (upgradeSelected && upgradeSelected.value === "Yes, Upgrade");
 
+            // Box Calculations with Quantities
+            const miniQty = parseInt(document.getElementById('mini-box-qty').value) || 0;
+            const sigQty = parseInt(document.getElementById('sig-box-qty').value) || 0;
+            const celQty = parseInt(document.getElementById('cel-box-qty').value) || 0;
+
+            const miniPrice = isUpgraded ? 31 : 28;
+            const sigPrice = isUpgraded ? 51 : 45;
+            const celPrice = isUpgraded ? 92 : 80;
+
+            subtotal += (miniQty * miniPrice) + (sigQty * sigPrice) + (celQty * celPrice);
+
+            // A La Carte Calculations
             const pretzels = (parseInt(document.getElementById('pretzels-qty').value) || 0) * 30;
             const oreos = (parseInt(document.getElementById('oreos-qty').value) || 0) * 30;
             const krispies = (parseInt(document.getElementById('krispies-qty').value) || 0) * 36;
@@ -562,14 +569,12 @@
             document.getElementById('hidden-total-input').value = formattedTotal;
         }
 
-        // TRIGGER EMAILJS UPON FORM SUBMISSION (WITH PHONE VALIDATION)
         async function handleFormSubmit(event) {
-            event.preventDefault(); // Pause form navigation
+            event.preventDefault();
             
             const phoneInput = document.getElementById('phone-number');
             const errorMsg = document.getElementById('phone-error-msg');
 
-            // Strictly check for 10 digits
             if (phoneInput.value.length !== 10) {
                 phoneInput.classList.add('error-input');
                 errorMsg.style.display = 'block';
@@ -586,7 +591,16 @@
             submitBtn.innerText = "Submitting...";
             submitBtn.disabled = true;
 
-            const boxChoice = document.querySelector('input[name="Box Choice"]:checked')?.value || "None";
+            // Build Box Summary
+            let boxes = [];
+            const mini = parseInt(document.getElementById('mini-box-qty').value) || 0;
+            const sig = parseInt(document.getElementById('sig-box-qty').value) || 0;
+            const cel = parseInt(document.getElementById('cel-box-qty').value) || 0;
+            
+            if(mini > 0) boxes.push(`${mini}x Mini Box`);
+            if(sig > 0) boxes.push(`${sig}x Signature Box`);
+            if(cel > 0) boxes.push(`${cel}x Celebration Box`);
+
             const upgradeChoice = document.querySelector('input[name="Cakesicle Upgrade"]:checked')?.value || "No Upgrade";
             const theme = document.getElementById('theme-input').value || "N/A";
             const colors = document.getElementById('colors-input').value || "N/A";
@@ -606,7 +620,7 @@
                 email_address: document.getElementById('email-address').value,
                 pickup_date: document.getElementById('pickup-date').value,
                 order_type: document.getElementById('order-type').value,
-                box_choice: boxChoice,
+                box_choice: boxes.length > 0 ? boxes.join(', ') : "None",
                 cakesicle_upgrade: upgradeChoice,
                 a_la_carte_summary: alaCarte.length > 0 ? alaCarte.join(', ') : "None",
                 theme_colors: `${theme} (${colors})`,
@@ -616,7 +630,6 @@
             };
 
             try {
-                // HARDCODED SERVICE AND TEMPLATE ID
                 await emailjs.send('service_4czvnwl', 'template_fuit15r', templateParams);
             } catch (error) {
                 console.error("EmailJS Submission Error:", error);
